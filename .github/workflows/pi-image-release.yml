@@ -34,6 +34,20 @@ jobs:
     needs: build-frontend
     runs-on: [self-hosted, pi-gen]
     steps:
+      - name: Root-eigene Artefakte vor dem Checkout entfernen
+        # pi-gen/output/, pi-gen/pi-gen-src/ und die Bundle-Stage werden von
+        # build.sh als root befüllt (sudo bash build.sh) und sind gitignored.
+        # actions/checkout@v4 versucht vor dem Checkout ein `git clean -ffdx`
+        # auf dem Arbeitsverzeichnis des persistenten Self-Hosted-Runners und
+        # schlägt dabei mit EACCES fehl, wenn root-eigene Dateien aus einem
+        # vorherigen Lauf noch dort liegen. Deshalb muss dieser Schritt VOR
+        # dem Checkout laufen — der spätere "Altes Output-Verzeichnis
+        # leeren"-Schritt kommt zu spät, weil actions/checkout@v4 bereits
+        # vorher fehlschlägt.
+        run: |
+          sudo rm -rf "${{ github.workspace }}/pi-gen/output"
+          sudo rm -rf "${{ github.workspace }}/pi-gen/pi-gen-src"
+          sudo rm -rf "${{ github.workspace }}/pi-gen/stage-smart-panel/01-install/bundle"
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
