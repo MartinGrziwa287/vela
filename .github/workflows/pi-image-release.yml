@@ -46,9 +46,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          IMAGE_FILE=$(ls pi-gen/output/${{ inputs.image-prefix }}-*.img 2>/dev/null | head -1)
+          IMAGE_FILE=$(ls pi-gen/output/*${{ inputs.image-prefix }}*.zip 2>/dev/null | head -1)
           if [ -z "$IMAGE_FILE" ]; then
-            echo "Kein Image unter pi-gen/output/${{ inputs.image-prefix }}-*.img gefunden"
+            echo "Kein Image unter pi-gen/output/*${{ inputs.image-prefix }}*.zip gefunden"
             exit 1
           fi
           gh release create "${{ github.ref_name }}" "$IMAGE_FILE" \
