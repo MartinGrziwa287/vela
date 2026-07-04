@@ -39,6 +39,8 @@ jobs:
         with:
           name: frontend-dist
           path: frontend/dist
+      - name: Altes Output-Verzeichnis leeren
+        run: sudo rm -rf pi-gen/output
       - name: Pi-Image bauen
         working-directory: pi-gen
         run: sudo bash build.sh
