@@ -57,6 +57,8 @@ jobs:
         run: sudo rm -rf pi-gen/output
       - name: Pi-Image bauen
         working-directory: pi-gen
+        env:
+          IMAGE_VERSION: ${{ github.ref_name }}
         run: sudo bash build.sh
       - name: GitHub Release mit Image erstellen
         env:
