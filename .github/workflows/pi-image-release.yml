@@ -59,7 +59,11 @@ jobs:
         working-directory: pi-gen
         env:
           IMAGE_VERSION: ${{ github.ref_name }}
-        run: sudo bash build.sh
+        # sudo setzt standardmäßig die Umgebung zurück und reicht IMAGE_VERSION nicht an
+        # den root-Prozess durch — --preserve-env sorgt dafür, dass build.sh die vom
+        # Workflow gesetzte Version tatsächlich sieht (sonst fällt es stillschweigend
+        # auf das Datum zurück, ohne Fehler).
+        run: sudo --preserve-env=IMAGE_VERSION bash build.sh
       - name: GitHub Release mit Image erstellen
         env:
           GH_TOKEN: ${{ github.token }}
